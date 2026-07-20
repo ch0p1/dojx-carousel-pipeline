@@ -1,0 +1,13 @@
+{
+  "name": "dojx-carousel-render",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Renderiza slides de carrusel DOJX a PNG usando Puppeteer",
+  "main": "render.js",
+  "scripts": {
+    "render": "node render.js"
+  },
+  "dependencies": {
+    "puppeteer": "^23.0.0"
+  }
+}
