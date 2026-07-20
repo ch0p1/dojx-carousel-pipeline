@@ -1,0 +1,32 @@
+{
+  "pillar_label": "LA DISCIPLINA, TU ALIADO",
+  "accent_color": "#C41E1E",
+  "caption": "El talento no madruga, la disciplina sí. #Disciplina #ArtesMarciales #DOJX #MentalidadCompetidor #Colombia",
+  "slides": [
+    {
+      "type": "content",
+      "title": "Todos quisiéramos tener <span class=\"accent\">talento</span>",
+      "title_case": "none",
+      "body": "",
+      "footer": "Pero el talento no se levanta temprano, no entrena cuando nadie quiere. La <span class=\"accent\">disciplina</span> sí.",
+      "footer_align": "left",
+      "background": { "type": "solid", "value": "#111111" }
+    },
+    {
+      "type": "content",
+      "title": "El error real",
+      "title_case": "none",
+      "body": "Es no volver a rodar con quien te sometió.",
+      "footer": "",
+      "footer_align": "left",
+      "background": { "type": "solid", "value": "#C41E1E" }
+    },
+    {
+      "type": "cta",
+      "bg_color": "#C41E1E",
+      "headline": "Las artes marciales cambian vidas",
+      "subline": "¿Qué esperas para cambiar la tuya?",
+      "follow_text": "Síguenos para seguir aprendiendo"
+    }
+  ]
+}

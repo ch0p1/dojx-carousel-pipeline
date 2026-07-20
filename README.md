@@ -55,7 +55,27 @@ filtrando por el callback del botón):**
 3. Si "Rechazar" → status = "rechazado", opcional: pedirte una nota de
    corrección y volver a llamar a Claude con esa nota como contexto extra.
 
-## 5. Bot de Telegram (5 minutos)
+## 5. Banco de imágenes de fondo (curación única, no automática)
+
+El sistema NO genera fotos ni arte por IA en tiempo real — eso rompería la consistencia
+visual y costaría dinero en cada corrida. En cambio:
+
+1. Subí a Cloudinary un set de 8-15 imágenes por pilar que ya tengas o generes una
+   sola vez (Kling, stock, tus propias fotos de Fight House Granada), organizadas en
+   carpetas: `backgrounds/disciplina/`, `backgrounds/kickboxing/`,
+   `backgrounds/depresion/`, `backgrounds/comunidad/`.
+2. En Make.com, agregá un módulo entre "Claude API" y "GitHub dispatch" que:
+   - Busque en el JSON de Claude cualquier slide con `background.value` igual a
+     `"PLACEHOLDER_BANCO_IMAGENES"`
+   - Llame a la API de Cloudinary (`resources/image/upload` con `prefix` = la carpeta
+     del pilar) para listar las imágenes disponibles
+   - Elija una al azar (módulo "Array Aggregator" + función `shuffle()` en Make, o un
+     paso de Node si preferís control fino)
+   - Reemplace el placeholder por la URL real antes de disparar el GitHub Action
+3. Repetir imágenes es aceptable — mejor una rotación de 10 fotos sólidas que buscar
+   una nueva cada vez.
+
+## 6. Bot de Telegram (5 minutos)
 
 Hablale a @BotFather en Telegram → `/newbot` → te da un token → lo usás
 en el módulo de Telegram de Make.

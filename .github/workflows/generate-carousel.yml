@@ -1,0 +1,61 @@
+name: Generate Carousel
+
+on:
+  repository_dispatch:
+    types: [generate-carousel]
+
+jobs:
+  render-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        working-directory: render
+        run: npm install
+
+      - name: Escribir payload recibido
+        working-directory: render
+        run: |
+          cat <<'PAYLOADEOF' > data.json
+          ${{ toJson(github.event.client_payload) }}
+          PAYLOADEOF
+
+      - name: Renderizar slides
+        working-directory: render
+        run: node render.js data.json
+
+      - name: Subir imágenes a Cloudinary
+        working-directory: render/output
+        env:
+          CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          UPLOAD_PRESET: ${{ secrets.CLOUDINARY_UPLOAD_PRESET }}
+        run: |
+          echo "[" > urls.json
+          first=true
+          for f in slide-*.png; do
+            resp=$(curl -s -X POST "https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload" \
+              -F "file=@${f}" -F "upload_preset=${UPLOAD_PRESET}")
+            url=$(echo "$resp" | grep -o '"secure_url":"[^"]*"' | sed 's/"secure_url":"//;s/"//')
+            if [ "$first" = true ]; then first=false; else echo "," >> urls.json; fi
+            echo "\"$url\"" >> urls.json
+          done
+          echo "]" >> urls.json
+          cat urls.json
+
+      - name: Avisar a Make.com con las URLs finales
+        working-directory: render/output
+        env:
+          MAKE_WEBHOOK: ${{ secrets.MAKE_CALLBACK_WEBHOOK }}
+          ROW_ID: ${{ github.event.client_payload.row_id }}
+        run: |
+          urls=$(cat urls.json)
+          curl -s -X POST "$MAKE_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "{\"row_id\": \"${ROW_ID}\", \"image_urls\": ${urls}}"
